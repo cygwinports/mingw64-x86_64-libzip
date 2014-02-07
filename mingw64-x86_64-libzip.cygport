@@ -1,0 +1,31 @@
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross
+
+NAME="mingw64-x86_64-libzip"
+VERSION=0.11.2
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="ZIP archive library for Win64 toolchain"
+DESCRIPTION="This is a C library for reading, creating, and modifying zip
+archives. Files can be added from data buffers, files, or compressed data
+copied directly from other zip archives.  Changes made without closing the
+archive can be reverted."
+HOMEPAGE="http://www.nih.at/libzip/"
+SRC_URI="http://www.nih.at/libzip/libzip-${VERSION}.tar.xz"
+SRC_DIR="libzip-${VERSION}"
+
+MAKEOPTS+=" bin_PROGRAMS= man1_MANS= "
+
+src_install() {
+	cd ${B}
+	cyginstall bin_PROGRAMS= man1_MANS=
+
+	# e.g. RHBZ#1008128
+	dosym ../lib/libzip/include/zipconf.h ${CROSS_INCLUDEDIR}/zipconf.h
+
+	# symlinks are installed, so this can't be avoided above
+	rm -fr ${D}${CROSS_DATADIR}/man/man3/
+}
+
+
+KEEP_LA_FILES="none"
